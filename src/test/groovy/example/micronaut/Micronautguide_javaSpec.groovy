@@ -11,6 +11,7 @@ class Micronautguide_javaSpec extends Specification {
     @Inject
     EmbeddedApplication<?> application
 
+    // comment / remove FunctionRequestHandler and the test will pass
     @Inject
     FunctionRequestHandler functionRequestHandler
 
@@ -18,5 +19,4 @@ class Micronautguide_javaSpec extends Specification {
         expect:
         application.running
     }
-
 }
