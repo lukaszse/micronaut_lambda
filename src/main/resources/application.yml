@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: micronautguide_java
+    data:
+      mongodb:
+        driver-type: reactive
+
+mongodb:
+  uri: mongodb://localhost:27017/product
+  package-names:
+    - com.roche.fnb.cateringwebshop.product.commons.product.mongodocument

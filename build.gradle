@@ -1,0 +1,75 @@
+plugins {
+    id("groovy")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.4.4"
+    id("io.micronaut.test-resources") version "4.4.4"
+    id("io.micronaut.aot") version "4.4.4"
+}
+
+version = "0.1"
+group = "example.micronaut"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("org.projectlombok:lombok")
+    implementation("io.micronaut.data:micronaut-data-mongodb")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.aws:micronaut-function-aws")
+    implementation("io.micronaut.aws:micronaut-aws-lambda-events-serde")
+    implementation("io.micronaut.aws:micronaut-function-aws-custom-runtime")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+    compileOnly("io.micronaut:micronaut-http-client")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.mongodb:mongodb-driver-reactivestreams")
+    runtimeOnly("org.yaml:snakeyaml")
+    compileOnly("org.projectlombok:lombok")
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut:micronaut-function")
+}
+
+
+application {
+    mainClass = "example.micronaut.Application"
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("21")
+    targetCompatibility = JavaVersion.toVersion("21")
+}
+
+
+graalvmNative.toolchainDetection = false
+
+micronaut {
+    runtime("netty")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("example.micronaut.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+        replaceLogbackXml = true
+    }
+}
+
+
+tasks.named("dockerfileNative") {
+    jdkVersion = "21"
+}
+
+
